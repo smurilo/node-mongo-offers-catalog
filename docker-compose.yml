@@ -1,0 +1,14 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes: [ "./seed:/docker-entrypoint-initdb.d:ro" ]
+  redis:
+    image: redis:7.4-alpine
+  api:
+    build: .
+    depends_on: [ mongo, redis ]
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: change-me-in-production
+    ports: [ "3000:3000" ]
